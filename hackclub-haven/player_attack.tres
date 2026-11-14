@@ -4,6 +4,6 @@
 
 [resource]
 script = ExtResource("1_772rs")
-damage = 5
+knockback = 500.0
 parriable = false
 metadata/_custom_type_script = "uid://5d550o4cy5jp"

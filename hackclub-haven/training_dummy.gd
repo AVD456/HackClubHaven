@@ -23,6 +23,14 @@ func _on_hit(attack: AttackData, direction: Vector2, _source: Node) -> void:
 	#knockback animations here DONT FORGET
 	flash()
 
+
+func check_contact() -> void:
+	for area in contact_hitbox.get_overlapping_areas():
+		if area is Hurtbox:
+			var push := (area.global_position - global_position).normalized()
+			area.receive_hit(contact_attack, push, self)
+
+
 func flash():
 	modulate = Color(3, 3, 3)  # brighter than white
 	await get_tree().create_timer(0.08, true, false, true).timeout

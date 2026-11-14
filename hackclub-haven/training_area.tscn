@@ -3,27 +3,41 @@
 [ext_resource type="PackedScene" uid="uid://dh7uk30rnp2hg" path="res://player.tscn" id="1_exc14"]
 [ext_resource type="PackedScene" uid="uid://ckadn2ms7pgb3" path="res://training_dummy.tscn" id="2_2bb53"]
 [ext_resource type="Resource" uid="uid://1n3mjhhpunbx" path="res://player_attack.tres" id="3_p75pi"]
+[ext_resource type="PackedScene" uid="uid://ntskbmwvpiqk" path="res://shadow.tscn" id="4_sfxbn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2bb53"]
 size = Vector2(27.005322, 21.20111)
 
-[sub_resource type="RectangleShape2D" id="RectangleShape2D_exc14"]
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_sfxbn"]
+
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_qi688"]
 
 [node name="TrainingArea" type="Node2D" unique_id=331027743]
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1232259716]
 
-[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=961334240]
-position = Vector2(239.5, 269.48254)
-scale = Vector2(18.033482, 0.8034921)
+[node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=670627299]
+position = Vector2(4039, 273.00003)
+scale = Vector2(325.20645, 0.6455996)
 shape = SubResource("RectangleShape2D_2bb53")
 
-[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1193253004]
-position = Vector2(94, 70)
-shape = SubResource("RectangleShape2D_exc14")
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1019273610]
+rotation = 1.5707964
+scale = Vector2(31.853275, 1.0361927)
+shape = SubResource("RectangleShape2D_sfxbn")
+
+[node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=1217255472]
+position = Vector2(477, 8)
+rotation = 1.5707964
+scale = Vector2(-29.678448, 0.61780965)
+shape = SubResource("RectangleShape2D_qi688")
 
 [node name="Player" parent="." unique_id=1331617099 instance=ExtResource("1_exc14")]
+position = Vector2(38, -6)
 
 [node name="TrainingDummy" parent="." unique_id=1342074861 instance=ExtResource("2_2bb53")]
 position = Vector2(238, 249)
 contact_attack = ExtResource("3_p75pi")
+
+[node name="Shadow" parent="." unique_id=569883537 instance=ExtResource("4_sfxbn")]
+position = Vector2(366, 235)

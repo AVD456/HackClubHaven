@@ -61,9 +61,8 @@ var attack_direction: Vector2 = Vector2.RIGHT
 
 var ult_hit_list: Array[Area2D] = []
 
-var ult_startup: float = 0.5
-var ult_active: float = 1.0
-var ult_recovery: float = 0.5
+var ult_startup: float = 1.0
+var ult_active: float = 0.5
 
 var ult_timer: float = 0.0
 var ult_cooldown_time: float = 0.1
@@ -76,8 +75,8 @@ var ult_direction: Vector2 = Vector2.RIGHT
 
 var hitstopping: bool = false
 
-@export var max_health: int = 5
-var health: int = 5
+@export var max_health: int = 50
+var health: int = 50
 
 var i_time: float = 1.0
 var i_timer: float = 0.0
@@ -121,6 +120,8 @@ func _physics_process(delta: float) -> void:
 			hurt_state(delta)
 		State.PARRY:
 			parry_state(delta)
+		State.ULT:
+			ult_state(delta)
 
 	move_and_slide()
 
@@ -138,6 +139,7 @@ func update_timers(delta: float):
 	dash_cooldown_timer = max(dash_cooldown_timer - delta, 0.0)
 	attack_cooldown_timer = max(attack_cooldown_timer - delta, 0.0)
 	parry_cooldown_timer = max(parry_cooldown_timer - delta, 0.0)
+	ult_cooldown_timer = max(ult_cooldown_timer - delta, 0.0)
 	i_timer = max(i_timer - delta, 0.0)
 	
 	var tint := Color.WHITE #replace later with animations
@@ -198,6 +200,11 @@ func normal_state(delta: float):
 	if Input.is_action_just_pressed("parry") and parry_cooldown_timer <= 0.0 and not attacking:
 		state = State.PARRY
 		parry_timer = 0.0
+		return
+		
+	if Input.is_action_just_pressed("ult") and ult_cooldown_timer <= 0.0:
+		state = State.ULT
+		ult_timer = 0.0
 		return
 
 func get_aim(use_mouse: bool) -> Vector2:
@@ -303,6 +310,40 @@ func successful_parry(source: Node, dmg: float):
 	
 	state = State.NORMAL
 
+func ult_state(delta: float):
+	ult_timer += delta
+	
+	velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
+	velocity.y = move_toward(velocity.x, 0.0, deceleration * delta)
+	
+	var is_ult = ult_timer >= ult_startup
+	
+	ult_shape.disabled = not is_ult or ult_timer < ult_startup
+	ult_shape.visible = is_ult or ult_timer < ult_startup
+	
+	if ult_timer < ult_startup:
+		ult_direction = get_aim(true).normalized()
+		ult_pivot.rotation = ult_direction.angle()
+		
+	if is_ult:
+		
+		for area in ult_hitbox.get_overlapping_areas():
+			if area in ult_hit_list:
+				continue
+			ult_hit_list.append(area)
+			if area is Hurtbox:
+				area.receive_hit(ult_data, ult_direction, self)
+				hitstop(ult_data.hitstop)
+	
+	if ult_timer >= (ult_startup + ult_active):
+		ult_cooldown_timer = ult_cooldown_time
+		ult_shape.disabled = true
+		ult_shape.visible = false
+		ult_hit_list.clear()
+		state = State.NORMAL
+		knockback(Vector2(-ult_direction.x, -ult_direction.y), ult_data.knockback * delta)
+		#print("active: done")
+	
 
 func hitstop(duration: float) -> void:
 	if hitstopping or duration <= 0.0:
@@ -334,11 +375,12 @@ func _on_hurtbox_hit(attack: AttackData, direction: Vector2, source: Node) -> vo
 	cancel_attack()
 	hitstop(attack.hitstop)
 	
-	knockback(direction, attack.knockback)
+	var knockback_x := signf(direction.x) if direction.x != 0.0 else float(-facing)
+	var knockback_direction = Vector2(knockback_x, -0.8)
+	knockback(knockback_direction, attack.knockback)
 	
 func knockback(direction: Vector2, knockback: float):
-	var knockback_x := signf(direction.x) if direction.x != 0.0 else float(-facing)
-	velocity = Vector2(knockback_x, -0.6).normalized() * knockback * 3
+	velocity = Vector2(direction).normalized() * knockback
 
 func hurt_state(delta: float) -> void:
 	velocity.x = move_toward(velocity.x, 0.0, deceleration * 0.5 * delta)
@@ -351,7 +393,7 @@ func hurt_state(delta: float) -> void:
 func die() -> void:
 	Engine.time_scale = 1.0
 	visible = false
-	get_tree().call_deferred("reload_current_scene")
+	get_tree().change_scene_to_file("res://control.tscn")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_hit"):

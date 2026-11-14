@@ -1,3 +1,41 @@
 [gd_scene format=3 uid="uid://ntskbmwvpiqk"]
 
+[ext_resource type="Script" uid="uid://8n4xu3eonjb0" path="res://shadow.gd" id="1_n2o5g"]
+[ext_resource type="Script" uid="uid://b2xggtatwaiyl" path="res://hurtbox.gd" id="2_icb2k"]
+[ext_resource type="Resource" uid="uid://cdj6t648eeumc" path="res://shadow_contact.tres" id="2_ov1mx"]
+[ext_resource type="Shape2D" uid="uid://y58ey5hwxbd5" path="res://shadow1.tres" id="3_ov1mx"]
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_ov1mx"]
+radius = 20.0
+height = 100.0
+
+[sub_resource type="CapsuleShape2D" id="CapsuleShape2D_eeawa"]
+radius = 18.0
+height = 94.0
+
 [node name="Shadow" type="CharacterBody2D" unique_id=569883537]
+collision_layer = 4
+collision_mask = 5
+script = ExtResource("1_n2o5g")
+contact_attack = ExtResource("2_ov1mx")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="." unique_id=2089220933]
+rotation = 1.5707964
+shape = ExtResource("3_ov1mx")
+
+[node name="Hurtbox" type="Area2D" parent="." unique_id=1796483609]
+collision_layer = 16
+collision_mask = 0
+script = ExtResource("2_icb2k")
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="Hurtbox" unique_id=257872365]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_ov1mx")
+
+[node name="ContactHitbox" type="Area2D" parent="." unique_id=1897654704]
+collision_layer = 0
+collision_mask = 8
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="ContactHitbox" unique_id=2013376234]
+rotation = 1.5707964
+shape = SubResource("CapsuleShape2D_eeawa")

@@ -1,0 +1,10 @@
+[gd_scene format=3 uid="uid://ded6ao6htoqn2"]
+
+[node name="Node2D" type="Node2D" unique_id=1421611998]
+
+[node name="RichTextLabel" type="RichTextLabel" parent="." unique_id=886276793]
+offset_left = 219.0
+offset_top = 108.0
+offset_right = 259.0
+offset_bottom = 148.0
+text = "WIN"

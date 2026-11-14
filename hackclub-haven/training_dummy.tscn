@@ -2,6 +2,7 @@
 
 [ext_resource type="Script" uid="uid://cobanagxkh66i" path="res://training_dummy.gd" id="1_w4js7"]
 [ext_resource type="Script" uid="uid://b2xggtatwaiyl" path="res://hurtbox.gd" id="2_7knb0"]
+[ext_resource type="Resource" uid="uid://dt7q5fjamklnn" path="res://dummy_counter.tres" id="2_a3bbp"]
 
 [sub_resource type="CapsuleShape2D" id="CapsuleShape2D_a3bbp"]
 radius = 5.0
@@ -13,6 +14,7 @@ height = 18.0
 
 [node name="TrainingDummy" type="Node2D" unique_id=1342074861]
 script = ExtResource("1_w4js7")
+contact_attack = ExtResource("2_a3bbp")
 
 [node name="Hurtbox" type="Area2D" parent="." unique_id=1950722365]
 collision_layer = 16
