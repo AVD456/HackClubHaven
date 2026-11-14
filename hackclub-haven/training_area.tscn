@@ -3,7 +3,6 @@
 [ext_resource type="PackedScene" uid="uid://dh7uk30rnp2hg" path="res://player.tscn" id="1_exc14"]
 [ext_resource type="PackedScene" uid="uid://ckadn2ms7pgb3" path="res://training_dummy.tscn" id="2_2bb53"]
 [ext_resource type="Resource" uid="uid://1n3mjhhpunbx" path="res://player_attack.tres" id="3_p75pi"]
-[ext_resource type="PackedScene" uid="uid://ntskbmwvpiqk" path="res://shadow.tscn" id="4_sfxbn"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2bb53"]
 size = Vector2(27.005322, 21.20111)
@@ -38,6 +37,3 @@ position = Vector2(38, -6)
 [node name="TrainingDummy" parent="." unique_id=1342074861 instance=ExtResource("2_2bb53")]
 position = Vector2(238, 249)
 contact_attack = ExtResource("3_p75pi")
-
-[node name="Shadow" parent="." unique_id=569883537 instance=ExtResource("4_sfxbn")]
-position = Vector2(366, 235)

@@ -31,7 +31,7 @@ func _ready() -> void:
 
 
 func get_parried(attack: AttackData, direction: Vector2):
-	$ContactHitbox.disabled = true
+	$ContactHitbox/CollisionShape2D.disabled = true
 	modulate = Color(0.3, 0.5, 1.0)
 	state = States.STUN
 	_on_hit(attack, direction, null)
@@ -46,7 +46,7 @@ func _physics_process(delta: float) -> void:
 	
 	match state:
 		States.IDLE:
-			state_timer -= delta
+			state_timer += delta
 			if player == null:
 				return
 			if (d) != 0.0:
@@ -56,50 +56,58 @@ func _physics_process(delta: float) -> void:
 			
 			velocity.x = facing * movespeed
 			
-			if abs(d) < 150 and state_timer <= 0:
+			if abs(d) < 150 and state_timer >= 1:
 				var c = randi_range(0, 3)
 				if c == 0:
-					state_timer = 0.2
+					state_timer = 0.0
 					state = States.CHARGE
+					print('charge')
 				elif c == 1:
-					velocity.y = jump_velocity
 					state = States.SLAM
-					state_timer = 0.2
+					state_timer = 0.0
+					print('slam')
 			if abs(d) > 300 and state_timer <= 0:
 				state_timer = 2.0
 				state = States.ROLL
+				print('roll')
 		States.ROLL:
-			
-			velocity.x = facing * 300
-			
-			state_timer -= delta
-			print(state_timer)
-			
-			if state_timer <= 0.0:
+			state_timer += delta
+			if is_on_wall():
+				facing *= -1
+
+			if state_timer > 0.1:
+				velocity.x = facing * 300
+			if state_timer >= 2.0:
 				state = States.IDLE
+				state_timer = 0.0
 		States.SLAM:
-			velocity.x = facing * movespeed
+			state_timer += delta
+			if state_timer > 0.5 and is_on_floor():
+				velocity.y = jump_velocity
+			if state_timer > 0.5:
+				velocity.x = d * 2
 			
-			if is_on_floor():
+			if is_on_floor() and state_timer > 0.6:
 				state = States.IDLE
+				state_timer = 0.0
 		States.CHARGE:
 			
-			velocity.x = facing * 400
+			if state_timer > 0.5:
+				velocity.x = facing * 400
 			
-			state_timer -= delta
+			state_timer += delta
 			
-			print(state_timer)
-			
-			print('charge')
-			
-			if state_timer <= 0.0:
-				state_timer = 1.0
+			if state_timer >= 0.7:
+				state_timer = 0.0
 				state = States.IDLE
 				
 			
 		States.STUN:
 			await get_tree().create_timer(2.0).timeout
 			state = States.IDLE
+			state_timer = 0.0
+			$ContactHitbox/CollisionShape2D.disabled = false
+			modulate = Color(1.0, 1.0, 1.0)
 			
 	velocity.x = move_toward(velocity.x, 0.0, 2000 * delta)
 	
