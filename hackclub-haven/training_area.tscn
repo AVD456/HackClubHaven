@@ -1,8 +1,11 @@
 [gd_scene format=3 uid="uid://cyughc8o2vu44"]
 
 [ext_resource type="PackedScene" uid="uid://dh7uk30rnp2hg" path="res://player.tscn" id="1_exc14"]
+[ext_resource type="PackedScene" uid="uid://ckadn2ms7pgb3" path="res://training_dummy.tscn" id="2_2bb53"]
+[ext_resource type="Resource" uid="uid://1n3mjhhpunbx" path="res://player_attack.tres" id="3_p75pi"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2bb53"]
+size = Vector2(27.005322, 21.20111)
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_exc14"]
 
@@ -11,7 +14,7 @@
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1232259716]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=961334240]
-position = Vector2(259, 269)
+position = Vector2(239.5, 269.48254)
 scale = Vector2(18.033482, 0.8034921)
 shape = SubResource("RectangleShape2D_2bb53")
 
@@ -20,3 +23,7 @@ position = Vector2(94, 70)
 shape = SubResource("RectangleShape2D_exc14")
 
 [node name="Player" parent="." unique_id=1331617099 instance=ExtResource("1_exc14")]
+
+[node name="TrainingDummy" parent="." unique_id=1342074861 instance=ExtResource("2_2bb53")]
+position = Vector2(238, 249)
+contact_attack = ExtResource("3_p75pi")

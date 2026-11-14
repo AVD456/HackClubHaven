@@ -1,7 +1,6 @@
 [gd_scene format=3 uid="uid://dh7uk30rnp2hg"]
 
 [ext_resource type="Script" uid="uid://3gd8c1uy50ty" path="res://player.gd" id="1_4flbx"]
-[ext_resource type="Resource" uid="uid://1n3mjhhpunbx" path="res://player_attack.tres" id="2_hqtel"]
 [ext_resource type="Script" uid="uid://b2xggtatwaiyl" path="res://hurtbox.gd" id="2_onrkg"]
 [ext_resource type="Resource" uid="uid://d31bno62epxkn" path="res://player_counter.tres" id="3_sweqy"]
 
@@ -13,11 +12,13 @@ height = 20.0
 radius = 4.0
 height = 18.0
 
+[sub_resource type="RectangleShape2D" id="RectangleShape2D_i3pqv"]
+size = Vector2(624, 8)
+
 [node name="Player" type="CharacterBody2D" unique_id=1331617099]
 collision_layer = 2
 collision_mask = 3
 script = ExtResource("1_4flbx")
-attack_data = ExtResource("2_hqtel")
 max_health = 50
 counter_data = ExtResource("3_sweqy")
 
@@ -42,3 +43,14 @@ collision_mask = 16
 [node name="CollisionPolygon2D" type="CollisionPolygon2D" parent="AttackPivot/AttackHitbox" unique_id=787698921]
 position = Vector2(13, 0)
 polygon = PackedVector2Array(-3, -10, 0, 0, -3, 10, 3, 10, 10, 0, 3, -10)
+
+[node name="UltimatePivot" type="Marker2D" parent="." unique_id=192258084]
+rotation = 0.0026156746
+
+[node name="UltimateHitbox" type="Area2D" parent="UltimatePivot" unique_id=101467280]
+
+[node name="CollisionShape2D2" type="CollisionShape2D" parent="UltimatePivot/UltimateHitbox" unique_id=1477164684]
+position = Vector2(311, 5.9604645e-08)
+shape = SubResource("RectangleShape2D_i3pqv")
+disabled = true
+debug_color = Color(0.7657363, 0.16879454, 0.99999994, 0.41960785)
