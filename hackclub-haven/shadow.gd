@@ -12,7 +12,7 @@ var jump_velocity = ((2 * jump_peak) / ascent_time) * -1
 var ascent_gravity = ((-2 * jump_peak) / (ascent_time * ascent_time)) * -1
 var descent_gravity = ((-2 * jump_peak) / (descent_time * descent_time)) * -1
 
-var max_health: int = 20.0
+var max_health: int = 50.0
 var health: int 
 var facing: int = -1
 var player: Node2D
@@ -42,17 +42,22 @@ func _physics_process(delta: float) -> void:
 	
 	d = player.global_position.x - global_position.x
 	
-	print(d)
-	
+	if state != States.ROLL:
+		$CollisionShape2D.shape = preload("res://cylinder.tres")
+		$ContactHitbox/CollisionShape2D.shape = preload("res://cylinder.tres")
+	else:
+		$CollisionShape2D.shape = preload("res://circle.tres")
+		$ContactHitbox/CollisionShape2D.shape = preload("res://circle.tres")
 	match state:
 		States.IDLE:
+			$AnimatedSprite2D.play("default")
 			state_timer += delta
 			if player == null:
 				return
 			if (d) != 0.0:
 				facing = int(signf(d))
-			
-			print('idle')
+
+			$AnimatedSprite2D.flip_h = false if facing == 1 else true
 			
 			velocity.x = facing * movespeed
 			
@@ -61,16 +66,18 @@ func _physics_process(delta: float) -> void:
 				if c == 0:
 					state_timer = 0.0
 					state = States.CHARGE
-					print('charge')
+
 				elif c == 1:
 					state = States.SLAM
 					state_timer = 0.0
-					print('slam')
-			if abs(d) > 300 and state_timer <= 0:
-				state_timer = 2.0
+
+			if abs(d) > 100 and state_timer <= 0:
+				state_timer = 0.0
 				state = States.ROLL
-				print('roll')
+
 		States.ROLL:
+			$AudioStreamPlayer2D.play()
+			$AnimatedSprite2D.play("roll")
 			state_timer += delta
 			if is_on_wall():
 				facing *= -1
@@ -81,6 +88,10 @@ func _physics_process(delta: float) -> void:
 				state = States.IDLE
 				state_timer = 0.0
 		States.SLAM:
+			$AnimatedSprite2D.play("pounce")
+			
+			
+			
 			state_timer += delta
 			if state_timer > 0.5 and is_on_floor():
 				velocity.y = jump_velocity
@@ -91,8 +102,12 @@ func _physics_process(delta: float) -> void:
 				state = States.IDLE
 				state_timer = 0.0
 		States.CHARGE:
+			$AnimatedSprite2D.play("default")
+			$AnimatedSprite2D.stop()
 			
-			if state_timer > 0.5:
+			$AudioStreamPlayer2D.play()
+			
+			if state_timer > 0.3:
 				velocity.x = facing * 400
 			
 			state_timer += delta
@@ -103,7 +118,9 @@ func _physics_process(delta: float) -> void:
 				
 			
 		States.STUN:
-			await get_tree().create_timer(2.0).timeout
+			$AudioStreamPlayer2D.play()
+			
+			await get_tree().create_timer(1.0).timeout
 			state = States.IDLE
 			state_timer = 0.0
 			$ContactHitbox/CollisionShape2D.disabled = false

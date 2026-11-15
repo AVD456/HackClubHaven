@@ -1,0 +1,35 @@
+[gd_scene format=3 uid="uid://cppfda8nkdji"]
+
+[ext_resource type="Script" uid="uid://j8oaynasn6ab" path="res://win.gd" id="1_xrsfq"]
+[ext_resource type="Texture2D" uid="uid://dcg07j0pewesa" path="res://lose.png" id="2_xrsfq"]
+[ext_resource type="Texture2D" uid="uid://dkq8i27s3jhyk" path="res://retry.png" id="3_s23sx"]
+[ext_resource type="Texture2D" uid="uid://mfqwlneqslm2" path="res://quit2.png" id="4_84ume"]
+
+[node name="lose" type="Node2D" unique_id=1421611998]
+script = ExtResource("1_xrsfq")
+
+[node name="ColorRect" type="ColorRect" parent="." unique_id=49705740]
+offset_right = 492.0
+offset_bottom = 278.0
+color = Color(0, 0, 0, 1)
+
+[node name="Title" type="Sprite2D" parent="." unique_id=1984899976]
+texture = ExtResource("2_xrsfq")
+centered = false
+
+[node name="Start" type="TextureButton" parent="." unique_id=1917002892]
+offset_left = 52.0
+offset_top = 122.0
+offset_right = 116.0
+offset_bottom = 162.0
+texture_normal = ExtResource("3_s23sx")
+
+[node name="Quit" type="TextureButton" parent="." unique_id=1276081394]
+offset_left = 372.0
+offset_top = 120.0
+offset_right = 436.0
+offset_bottom = 160.0
+texture_normal = ExtResource("4_84ume")
+
+[connection signal="pressed" from="Start" to="." method="_on_start_pressed"]
+[connection signal="pressed" from="Quit" to="." method="_on_quit_pressed"]

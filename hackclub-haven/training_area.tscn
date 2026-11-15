@@ -1,8 +1,22 @@
 [gd_scene format=3 uid="uid://cyughc8o2vu44"]
 
+[ext_resource type="Script" uid="uid://dus6snjnlu3wa" path="res://training_area.gd" id="1_5raoq"]
 [ext_resource type="PackedScene" uid="uid://dh7uk30rnp2hg" path="res://player.tscn" id="1_exc14"]
-[ext_resource type="PackedScene" uid="uid://ckadn2ms7pgb3" path="res://training_dummy.tscn" id="2_2bb53"]
-[ext_resource type="Resource" uid="uid://1n3mjhhpunbx" path="res://player_attack.tres" id="3_p75pi"]
+[ext_resource type="Texture2D" uid="uid://dpkd6lvyoeq38" path="res://background.png" id="3_6qabb"]
+[ext_resource type="Texture2D" uid="uid://q3d1tkelxyiy" path="res://background2.png" id="4_m4phm"]
+[ext_resource type="PackedScene" uid="uid://ntskbmwvpiqk" path="res://shadow.tscn" id="4_sfxbn"]
+[ext_resource type="Texture2D" uid="uid://cvlw5aivxgq4h" path="res://background3.png" id="5_1m1sn"]
+[ext_resource type="Script" uid="uid://cr5lx3tmymtbb" path="res://camera_2d.gd" id="5_gyood"]
+[ext_resource type="Texture2D" uid="uid://bth3u750usut2" path="res://background4.png" id="6_gx7vm"]
+[ext_resource type="Texture2D" uid="uid://mv1cll5ttjfc" path="res://bossbar2.png" id="6_gyood"]
+[ext_resource type="Texture2D" uid="uid://muaj55suobeg" path="res://background5.png" id="7_gyood"]
+[ext_resource type="Texture2D" uid="uid://c8qf8nx8w6g1j" path="res://bossbar.png" id="7_u0iu0"]
+[ext_resource type="Texture2D" uid="uid://brw1q5bop1o2h" path="res://name.png" id="8_oghy5"]
+[ext_resource type="Script" uid="uid://docxmmlco56v5" path="res://texture_progress_bar.gd" id="11_u0iu0"]
+[ext_resource type="Texture2D" uid="uid://e1fi01t2ixcj" path="res://healthbar2.png" id="12_t40yi"]
+[ext_resource type="Texture2D" uid="uid://df31ruf5qx3ys" path="res://healthbar1.png" id="13_5raoq"]
+[ext_resource type="AudioStream" uid="uid://dcshxvsbt7fhr" path="res://1st_boss_music.wav" id="13_oghy5"]
+[ext_resource type="Script" uid="uid://bcvbvjdlm1dei" path="res://healthbar.gd" id="14_yrp02"]
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_2bb53"]
 size = Vector2(27.005322, 21.20111)
@@ -12,28 +26,93 @@ size = Vector2(27.005322, 21.20111)
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_qi688"]
 
 [node name="TrainingArea" type="Node2D" unique_id=331027743]
+script = ExtResource("1_5raoq")
+
+[node name="Background" type="Sprite2D" parent="." unique_id=568809044]
+texture = ExtResource("3_6qabb")
+centered = false
+
+[node name="Background2" type="Sprite2D" parent="." unique_id=1907770707]
+texture = ExtResource("4_m4phm")
+centered = false
+
+[node name="Background3" type="Sprite2D" parent="." unique_id=1920777868]
+texture = ExtResource("5_1m1sn")
+centered = false
+
+[node name="Background4" type="Sprite2D" parent="." unique_id=1201795008]
+texture = ExtResource("6_gx7vm")
+centered = false
 
 [node name="StaticBody2D" type="StaticBody2D" parent="." unique_id=1232259716]
 
 [node name="CollisionShape2D" type="CollisionShape2D" parent="StaticBody2D" unique_id=670627299]
-position = Vector2(4039, 273.00003)
+position = Vector2(4033, 247.00002)
 scale = Vector2(325.20645, 0.6455996)
 shape = SubResource("RectangleShape2D_2bb53")
 
 [node name="CollisionShape2D2" type="CollisionShape2D" parent="StaticBody2D" unique_id=1019273610]
+position = Vector2(25, 59)
 rotation = 1.5707964
 scale = Vector2(31.853275, 1.0361927)
 shape = SubResource("RectangleShape2D_sfxbn")
 
 [node name="CollisionShape2D3" type="CollisionShape2D" parent="StaticBody2D" unique_id=1217255472]
-position = Vector2(477, 8)
+position = Vector2(455, 23.000004)
 rotation = 1.5707964
 scale = Vector2(-29.678448, 0.61780965)
 shape = SubResource("RectangleShape2D_qi688")
 
-[node name="Player" parent="." unique_id=1331617099 instance=ExtResource("1_exc14")]
-position = Vector2(38, -6)
+[node name="Camera2D" type="Camera2D" parent="." unique_id=825231335]
+position = Vector2(1, 0)
+zoom = Vector2(1.4, 1.4)
+limit_left = 0
+limit_top = 0
+limit_right = 480
+limit_bottom = 270
+limit_smoothed = true
+position_smoothing_enabled = true
+script = ExtResource("5_gyood")
 
-[node name="TrainingDummy" parent="." unique_id=1342074861 instance=ExtResource("2_2bb53")]
-position = Vector2(238, 249)
-contact_attack = ExtResource("3_p75pi")
+[node name="Player" parent="." unique_id=1331617099 instance=ExtResource("1_exc14")]
+position = Vector2(249, 76)
+
+[node name="Shadow" parent="." unique_id=569883537 groups=["enemy"] instance=ExtResource("4_sfxbn")]
+position = Vector2(408, 223)
+
+[node name="Background5" type="Sprite2D" parent="." unique_id=1471737676]
+position = Vector2(-0.5, -0.5)
+texture = ExtResource("7_gyood")
+centered = false
+
+[node name="Control" type="CanvasLayer" parent="." unique_id=544989329]
+
+[node name="TextureProgressBar" type="TextureProgressBar" parent="Control" unique_id=1724225172]
+offset_left = 110.0
+offset_top = 32.5
+offset_right = 452.0
+offset_bottom = 72.5
+max_value = 50.0
+value = 50.0
+texture_under = ExtResource("6_gyood")
+texture_progress = ExtResource("7_u0iu0")
+script = ExtResource("11_u0iu0")
+
+[node name="healthbar" type="TextureProgressBar" parent="Control" unique_id=840529588]
+offset_left = 179.0
+offset_top = 48.0
+offset_right = 461.0
+offset_bottom = 88.0
+max_value = 50.0
+texture_under = ExtResource("12_t40yi")
+texture_progress = ExtResource("13_5raoq")
+script = ExtResource("14_yrp02")
+
+[node name="Name" type="Sprite2D" parent="Control" unique_id=506267078]
+position = Vector2(144, 25.5)
+texture = ExtResource("8_oghy5")
+
+[node name="AudioStreamPlayer2D" type="AudioStreamPlayer2D" parent="." unique_id=1223826612]
+stream = ExtResource("13_oghy5")
+volume_db = 2.0
+autoplay = true

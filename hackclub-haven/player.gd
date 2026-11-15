@@ -21,7 +21,7 @@ var can_cut_jump: bool = false
 var jump_cutoff: float = 0.5
 var cutoff_weight: float = 0.4
 
-var pogo_velocity: float = -450.0
+var pogo_velocity: float = -350.0
 
 var jump_buffer_time: float = 0.075 #three frames
 var jump_buffer_timer: float = 0.0
@@ -152,10 +152,22 @@ func update_timers(delta: float):
 func normal_state(delta: float):
 	h_direction = Input.get_axis("left", "right")
 	
+	$AnimatedSprite2D.flip_h = false if facing == 1 else true
+	
+	if h_direction != 0.0 and is_on_floor():
+		$run.play()
+		$AnimatedSprite2D.play("walk")
+		$CPUParticles2D.emitting = true
+	else:
+		$AnimatedSprite2D.play("default")
+		$CPUParticles2D.emitting = false
+		$run.stop()
 	if h_direction != 0.0:
+
 		facing = int(signf(h_direction))
 		velocity.x = move_toward(velocity.x, h_direction * max_speed, acceleration * delta)
 	else:
+
 		velocity.x = move_toward(velocity.x, 0.0, deceleration * delta)
 	
 	if coyote_timer > 0.0 and jump_buffer_timer > 0.0:
@@ -201,11 +213,6 @@ func normal_state(delta: float):
 		state = State.PARRY
 		parry_timer = 0.0
 		return
-		
-	if Input.is_action_just_pressed("ult") and ult_cooldown_timer <= 0.0:
-		state = State.ULT
-		ult_timer = 0.0
-		return
 
 func get_aim(use_mouse: bool) -> Vector2:
 	if use_mouse:
@@ -249,6 +256,8 @@ func update_attack(delta: float):
 	attack_shape.visible = is_active
 	
 	if is_active:
+		$slash.play()
+		$AttackPivot/AttackHitbox/CollisionPolygon2D/AnimatedSprite2D.play("default")
 		for area in attack_hitbox.get_overlapping_areas():
 			if area in attack_hit_list:
 				continue
@@ -261,7 +270,8 @@ func update_attack(delta: float):
 					can_cut_jump = false
 					can_dash = true
 					coyote_timer = 0.0
-	
+	else:
+		$AttackPivot/AttackHitbox/CollisionPolygon2D/AnimatedSprite2D.stop()
 	if is_active and not was_active:
 		#print("active: active")
 		pass
@@ -297,7 +307,7 @@ func parry_state(delta: float):
 		parry_cooldown_timer = parry_cooldown_time
 
 func successful_parry(source: Node, dmg: float):
-	print("parry!")
+	$parry.play()
 	i_timer = parry_i_time
 	can_dash = true
 	hitstop(counter_data.hitstop)
@@ -350,7 +360,8 @@ func hitstop(duration: float) -> void:
 		return
 	hitstopping = true
 	Engine.time_scale = 0.05
-	await get_tree().create_timer(duration, true, false, true).timeout
+	if get_tree():
+		await get_tree().create_timer(duration, true, false, true).timeout
 	Engine.time_scale = 1.0
 	hitstopping = false
 
@@ -363,6 +374,7 @@ func _on_hurtbox_hit(attack: AttackData, direction: Vector2, source: Node) -> vo
 		return
 	
 	health -= attack.damage
+	$hit.play()
 	print("player hit! health: ", health)
 	
 	if health <= 0:
@@ -393,7 +405,7 @@ func hurt_state(delta: float) -> void:
 func die() -> void:
 	Engine.time_scale = 1.0
 	visible = false
-	get_tree().change_scene_to_file("res://control.tscn")
+	get_tree().change_scene_to_file("res://lose.tscn")
 
 func _unhandled_input(event: InputEvent) -> void:
 	if event.is_action_pressed("debug_hit"):
